@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eenc.tipocambio.dao.ITipoCambioDao;
 import com.eenc.tipocambio.model.TipoCambio;
+import com.eenc.tipocambio.service.ITipoCambioService;
+import com.eenc.tipocambio.service.TipoCambioRequest;
+import com.eenc.tipocambio.service.TipoCambioResponse;
 
 @RestController
 @RequestMapping("/api")
@@ -26,8 +29,19 @@ public class TipoCambioController {
 	@Autowired
 	private ITipoCambioDao tipoCambioDao;
 
-//	@Autowired
-//	private ITipoCambioService tipoCambioService;
+	@Autowired
+	private ITipoCambioService tipoCambioService;
+
+	@PostMapping("/cambiar")
+	public ResponseEntity<TipoCambioResponse> aplicarTipoCambio(@RequestBody TipoCambioRequest request) {
+		TipoCambioResponse response = null;
+		try {
+			response = tipoCambioService.calcularMonto(request);
+		} catch (Exception e) {
+			return new ResponseEntity<TipoCambioResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<TipoCambioResponse>(response, HttpStatus.OK);
+	}
 
 	@GetMapping("/listar")
 	public ResponseEntity<List<TipoCambio>> listarTipoCambio(Model model) {
@@ -61,7 +75,8 @@ public class TipoCambioController {
 	}
 
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<TipoCambio> actualizarTipoCambio(@PathVariable(value = "id") Long id, @RequestBody TipoCambio tipoCambio) {
+	public ResponseEntity<TipoCambio> actualizarTipoCambio(@PathVariable(value = "id") Long id,
+			@RequestBody TipoCambio tipoCambio) {
 		Optional<TipoCambio> tipoCambioData = tipoCambioDao.findById(id);
 		if (tipoCambioData.isPresent()) {
 			TipoCambio tCambio = tipoCambioData.get();
@@ -73,16 +88,16 @@ public class TipoCambioController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	  @DeleteMapping("/eliminar/{id}")
-	  public ResponseEntity<HttpStatus> eliminarTipoCambio(@PathVariable("id") long id) {
-	    try {
-	    	tipoCambioDao.deleteById(id);
+
+	@DeleteMapping("/eliminar/{id}")
+	public ResponseEntity<HttpStatus> eliminarTipoCambio(@PathVariable("id") long id) {
+		try {
+			tipoCambioDao.deleteById(id);
 //	      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	      return new ResponseEntity<>(HttpStatus.OK);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	  }
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 }

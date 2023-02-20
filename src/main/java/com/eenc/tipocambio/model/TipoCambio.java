@@ -2,6 +2,7 @@ package com.eenc.tipocambio.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class TipoCambio implements Serializable {
 
 	private String tipo;
 
+	 @Column(name = "cambio", nullable = false, scale = 2)
 	private Double cambio;
 	
 }

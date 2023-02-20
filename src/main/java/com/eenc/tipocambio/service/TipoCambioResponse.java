@@ -1,5 +1,7 @@
 package com.eenc.tipocambio.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,10 +9,17 @@ import lombok.Setter;
 @Setter
 public class TipoCambioResponse {
 
-	private Double monto;
+	@JsonProperty("monto")
+	private Double cantidadMonedaOrigen;
+	
+	@JsonProperty("monedaOrigen")
+	private String tipoMonedaOrigen;
+	
+	@JsonProperty("monedaDestino")
+	private String tipoMonedaDestino;
+	
 	private Double montoCambio;
-	private String monedaOrigen;
-	private String monedaDestino;
-	private String tipoCambio;
+
+	private Double tipoCambio;
 
 }
